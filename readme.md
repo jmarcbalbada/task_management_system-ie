@@ -26,7 +26,7 @@ git clone https://github.com/jmarcbalbada/task_management_system-ie.git
 Set up the database:
 
 - Open XAMPP and start the Apache and MySQL services.
-- Navigate to the `backend` directory and import the SQL statements located in `backend/import_sql` into your MySQL database. This will create the necessary tables and populate them with sample data.
+- Navigate to the `backend` directory and import the SQL statements located in `backend/task_management.sql` into your MySQL database. This will create the necessary tables and populate them with sample data.
   
 ## Install backend dependencies:
 
