@@ -19,6 +19,22 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/:categoryId", (req, res) => {
+  const categoryId = req.params.categoryId;
+  const sql = "SELECT COUNT(*) AS count FROM categories WHERE category_id = ?";
+
+  db.query(sql, [categoryId], (err, result) => {
+    if (err) {
+      console.error("Error fetching category:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    const count = result[0].count;
+    const categoryExists = count > 0;
+    return res.json({ exists: categoryExists });
+  });
+});
+
 // Add a new category
 router.post("/", (req, res) => {
   const { category_name } = req.body;

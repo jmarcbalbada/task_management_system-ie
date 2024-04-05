@@ -17,18 +17,17 @@ const Dashboard = () => {
         <div
           style={{
             textAlign: "center",
-            marginTop: "5%",
-            marginLeft: "3%",
+            marginTop: "8%",
             justifyContent: "center",
             position: "relative",
             flex: 1,
-            paddingLeft: "2%",
+            paddingLeft: "300px",
             display: "inline",
             whiteSpace: "nowrap",
           }}
         >
           {/* Render the image */}
-          <h1> No category selected. </h1>
+          <h1> No category selected, create or select one.</h1>
           <img src={WriteNowImage} alt="Write Now" />
         </div>
       ) : (

@@ -8,10 +8,12 @@ import DeleteTaskModal from "./DeleteTaskModal";
 import axios from "axios";
 import config from "../data/configure";
 import EditTaskModal from "./EditTaskModal";
+import Forbidden from "../assets/forbidden.png";
 
 const TaskContents = ({ categoryId }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState(null); // State to track selected task ID
+  const [categoryExists, setCategoryExists] = useState(true);
 
   const handleStatusClick = (selectedValue, taskId) => {
     // Update the task status locally first
@@ -46,8 +48,8 @@ const TaskContents = ({ categoryId }) => {
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  useEffect(() => {
-    // Fetch tasks for the selected category
+  // Function to fetch tasks based on category
+  const fetchTasksByCategory = () => {
     axios
       .get(`${config.API_URL}task/category/${categoryId}`)
       .then((response) => {
@@ -56,7 +58,54 @@ const TaskContents = ({ categoryId }) => {
       .catch((error) => {
         console.error("Error fetching tasks:", error);
       });
+  };
+
+  // Initial fetch for tasks based on category
+  useEffect(() => {
+    fetchTasksByCategory();
   }, [categoryId, tasks]);
+
+  // Function to check category existence at intervals
+  const checkCategoryExistence = () => {
+    //console.log("category existence: id", categoryExists, categoryId);
+    axios
+      .get(`${config.API_URL}categories/${categoryId}`)
+      .then((response) => {
+        //console.log("response", response.data.exists);
+        setCategoryExists(response.data.exists);
+      })
+      .catch((error) => {
+        setCategoryExists(response.data.exists);
+        console.error("Error checking category existence:", error);
+      });
+  };
+
+  // Initial check for category existence
+  useEffect(() => {
+    checkCategoryExistence();
+  }, []);
+
+  // Interval to check category existence every second
+  useEffect(() => {
+    const intervalId = setInterval(checkCategoryExistence, 1000);
+    return () => clearInterval(intervalId); // Cleanup function to clear the interval when component unmounts
+  }, []);
+
+  // If the category doesn't exist, render a message indicating no tasks available
+  if (!categoryExists) {
+    return (
+      <div
+        style={{ textAlign: "center", marginTop: "8%", paddingLeft: "300px" }}
+      >
+        <h1>
+          No tasks available. Category does not exist. <br />
+          <br />
+          Try refreshing the page.
+        </h1>
+        <img src={Forbidden} alt="403 Forbidden" />
+      </div>
+    );
+  }
 
   // Group tasks based on status
   const groupedTasks = groupTasksByStatus(tasks);
@@ -79,10 +128,29 @@ const TaskContents = ({ categoryId }) => {
         }}
       >
         {/* Content inline with the NavDrawer */}
-        <h1 style={{ display: "inline-flex", cursor: "default" }}>Tasks</h1>
-        <Tooltip title="Create task" variant="solid" size="sm">
-          <BasicModalDialog category_id={categoryId} />
-        </Tooltip>
+        <h1
+          style={{
+            display: "inline-flex",
+            cursor: "default",
+            marginLeft: tasks.length === 0 ? "10px" : "0",
+          }}
+        >
+          Tasks
+        </h1>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            whiteSpace: "nowrap",
+            width: tasks.length === 0 ? "130px" : "auto",
+            paddingLeft: tasks.length === 0 ? "482%" : "0",
+            // marginLeft: tasks.length === 0 ? "500%" : 0,
+          }}
+        >
+          <Tooltip title="Create task" variant="solid" size="sm">
+            <BasicModalDialog category_id={categoryId} />
+          </Tooltip>
+        </div>
       </div>
 
       {/* Render tasks under respective headers */}
