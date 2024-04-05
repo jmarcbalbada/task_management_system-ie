@@ -41,9 +41,14 @@ const BasicModalDialog = forwardRef(({ category_id }, ref) => {
     if (deadline && new Date(deadline) > new Date()) {
       // Convert formatted date string to datetime format
       const formattedDateTime = new Date(formData.due_date);
+      formattedDateTime.setDate(formattedDateTime.getDate() + 1); // Add 1 day to the date
       // Handle form submission with valid deadline
       axios
-        .post(`${config.API_URL}task`, { ...formData, due_date: formattedDateTime, category_id })
+        .post(`${config.API_URL}task`, {
+          ...formData,
+          due_date: formattedDateTime.toISOString().split("T")[0],
+          category_id,
+        })
         .then((response) => {
           console.log("Task created successfully:", response.data);
           setOpen(false);
@@ -59,8 +64,6 @@ const BasicModalDialog = forwardRef(({ category_id }, ref) => {
       setTimeout(() => setIsShaking(false), 500); // Reset shaking after 500ms
     }
   };
-  
-  
 
   const handleDeadlineChange = (newValue) => {
     const actualDate = newValue.$d;

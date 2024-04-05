@@ -46,6 +46,21 @@ router.put("/:task_id/status", (req, res) => {
   });
 });
 
+// Endpoint to update the title, description, and due date of a task by task_id
+router.put("/:task_id", (req, res) => {
+  const taskId = req.params.task_id;
+  const { title, description, due_date } = req.body;
+  const sql = "UPDATE tasks SET title=?, description=?, due_date=? WHERE task_id=?";
+  db.query(sql, [title, description, due_date, taskId], (err, result) => {
+    if (err) {
+      console.error("Error updating task:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+    return res.json({ message: "Task updated successfully" });
+  });
+});
+
+
 // Endpoint to delete task by task_id
 router.delete("/:task_id", (req, res) => {
   const taskId = req.params.task_id;

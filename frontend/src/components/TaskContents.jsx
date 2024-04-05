@@ -4,7 +4,7 @@ import Box from "@mui/joy/Box";
 import Dropdown from "./Dropdown";
 import Tooltip from "@mui/joy/Tooltip";
 import BasicModalDialog from "./BasicModalDialog";
-import DeleteTaskModal from "./DeleteTaskModal"; // Import DeleteTaskModal
+import DeleteTaskModal from "./DeleteTaskModal";
 import axios from "axios";
 import config from "../data/configure";
 import EditTaskModal from "./EditTaskModal";
@@ -34,14 +34,11 @@ const TaskContents = ({ categoryId }) => {
   };
 
   const handleDeleteClick = (taskId) => {
-    // Set the selected task ID for deletion
     setSelectedTaskId(taskId);
   };
 
   const handleBoxClick = (task) => {
-    // Perform any action you want when a task box is clicked
     console.log("Task box clicked with:", task);
-    // For example, you can open a modal for editing the task
   };
 
   const formatDate = (dateString) => {
@@ -59,7 +56,7 @@ const TaskContents = ({ categoryId }) => {
       .catch((error) => {
         console.error("Error fetching tasks:", error);
       });
-  }, [categoryId]);
+  }, [categoryId, tasks]);
 
   // Group tasks based on status
   const groupedTasks = groupTasksByStatus(tasks);
@@ -171,7 +168,7 @@ const TaskContents = ({ categoryId }) => {
                   <Tooltip title="Delete task" variant="solid" size="sm">
                     <DeleteTaskModal taskId={task.task_id} />
                   </Tooltip>
-                  <EditTaskModal task_id={task.task_id} />
+                  <EditTaskModal task={task} />
                 </div>
                 <Typography
                   variant="h7"
