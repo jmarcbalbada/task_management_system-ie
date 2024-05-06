@@ -4,11 +4,12 @@ const router = express.Router();
 // Fetch the existing db connection from server.js
 const db = require("../server").db;
 
-router.get("/", (req, res) => {
+router.get("/getCategory/:userId", (req, res) => {
   // Fetch categories from the database
-  const sql = "SELECT * FROM categories";
+  const userId = req.params.userId;
+  const sql = "SELECT * FROM categories where user_id = ?";
 
-  db.query(sql, (err, result) => {
+  db.query(sql, [userId], (err, result) => {
     if (err) {
       console.error("Error fetching categories:", err);
       return res.status(500).json({ error: "Internal server error" });
@@ -37,19 +38,23 @@ router.get("/:categoryId", (req, res) => {
 
 // Add a new category
 router.post("/", (req, res) => {
-  const { category_name } = req.body;
+  const { category_name, user_id } = req.body;
 
   // Validate if category_name is provided
   if (!category_name) {
     return res.status(400).json({ error: "Category name is required" });
   }
 
+  if (!user_id) {
+    return res.status(400).json({ error: "User Id is required" });
+  }
+
   // Construct SQL query to insert a new category
   const insertCategoryQuery =
-    "INSERT INTO categories (category_name) VALUES (?)";
+    "INSERT INTO categories (category_name, user_id) VALUES (?, ?)";
 
   // Execute the insert query
-  db.query(insertCategoryQuery, [category_name], (err, result) => {
+  db.query(insertCategoryQuery, [category_name, user_id], (err, result) => {
     if (err) {
       console.error("Error adding category:", err);
       return res.status(500).json({ error: "Internal server error" });
@@ -66,7 +71,8 @@ router.put("/:categoryId", (req, res) => {
   const newName = req.body.category_name; // Assuming the new name is provided in the request body under category_name
 
   // Construct SQL query to update the category name
-  const updateCategoryQuery = "UPDATE categories SET category_name = ? WHERE category_id = ?";
+  const updateCategoryQuery =
+    "UPDATE categories SET category_name = ? WHERE category_id = ?";
 
   // Execute the update category query
   db.query(updateCategoryQuery, [newName, categoryId], (err, result) => {
