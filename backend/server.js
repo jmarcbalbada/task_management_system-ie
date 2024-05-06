@@ -28,8 +28,10 @@ module.exports.db = db;
 // Import and use the task and categories routes
 const taskRoute = require("./api/task");
 const categoriesRoute = require("./api/categories");
+const userRoute = require("./api/user");
 app.use("/task", taskRoute);
 app.use("/categories", categoriesRoute);
+app.use("/user", userRoute);
 
 app.get("/", (req, res) => {
   return res.json("Backend is up and running");
