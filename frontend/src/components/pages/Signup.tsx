@@ -15,6 +15,11 @@ import Stack from "@mui/joy/Stack";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
+import config from "../../data/configure";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/joy/Snackbar";
+import Alert from "@mui/material/Alert";
 
 interface FormElements extends HTMLFormControlsCollection {
   username: HTMLInputElement; // Change from email to username
@@ -51,8 +56,12 @@ function ColorSchemeToggle(props: IconButtonProps) {
 
 export default function Signup() {
   const [error, setError] = React.useState<string | null>(null);
+  const navigate = useNavigate();
+  const [showDialog, setShowDialog] = React.useState(false);
+  const [clickedSubmit, setClickedSubmit] = React.useState(false);
 
-  const onSubmitSignup = (data) => {
+  const onSubmitSignup = async (data) => {
+    setClickedSubmit(true);
     if (data.password !== data.con_password) {
       setError("Passwords do not match");
       return;
@@ -60,6 +69,26 @@ export default function Signup() {
     console.log("login clicked");
     console.log("data", data);
     setError(null); // Reset error state on successful submission
+
+    try {
+      const response = await axios.post(`${config.API_URL}user/register`, {
+        username: data.username,
+        password: data.password,
+      });
+
+      if (response) {
+        console.log(response);
+        // localStorage.setItem("user", JSON.stringify(data.username));
+        // delay 2 seconds
+        setShowDialog(true);
+        setTimeout(() => {
+          navigate("/login");
+        }, 5000);
+        // navigate("/login");
+      }
+    } catch (error) {
+      setError("Username is already taken! Try other one.");
+    }
   };
 
   return (
@@ -150,11 +179,6 @@ export default function Signup() {
                 </Typography>
               </Stack>
             </Stack>
-            {/* {error && (
-              <Typography sx={{ mt: 1, mb: 2, color: "#ef5350" }}>
-                {error}
-              </Typography>
-            )} */}
             <Divider
               sx={(theme) => ({
                 [theme.getColorSchemeSelector("light")]: {
@@ -195,9 +219,16 @@ export default function Signup() {
                   </Typography>
                 )}
                 <Stack gap={4} sx={{ mt: 1 }}>
-                  <Button type="submit" fullWidth>
-                    Sign me up!
-                  </Button>
+                  {!clickedSubmit ? (
+                    <Button
+                      type="submit"
+                      fullWidth
+                    >
+                      Sign me up!
+                    </Button>
+                  ) : (
+                    <Button loading fullWidth />
+                  )}
                 </Stack>
               </form>
             </Stack>
@@ -208,6 +239,26 @@ export default function Signup() {
             </Typography>
           </Box>
         </Box>
+        <Snackbar
+          variant="soft"
+          color="success"
+          open={showDialog}
+          onClose={() => setShowDialog(false)}
+          // autoHideDuration={10}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          endDecorator={
+            <Button
+              onClick={() => setShowDialog(false)}
+              size="sm"
+              variant="soft"
+              color="success"
+            >
+              Dismiss
+            </Button>
+          }
+        >
+          Registered successfully! Redirecting you to login...
+        </Snackbar>
       </Box>
       <Box
         sx={(theme) => ({

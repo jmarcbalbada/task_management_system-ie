@@ -10,11 +10,11 @@ function useAuthentication() {
   const login = (username, password) => {
     // You can implement your authentication logic here
     if (username && password) {
+      localStorage.setItem("user", JSON.stringify({ username }));
       setUser({ username }); // Set the user object with username
       setError(null);
       setAuthenticate(true);
       // Store user information in localStorage
-      localStorage.setItem("user", JSON.stringify({ username }));
     } else {
       setAuthenticate(false);
       setUser(null);

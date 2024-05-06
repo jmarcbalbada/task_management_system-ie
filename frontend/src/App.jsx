@@ -19,14 +19,10 @@ function App() {
     <Router>
       <>
         <Routes>
-          {authenticate ? (
-            <Route path="/" element={<Dashboard />} />
-          ) : (
-            <Route path="/" element={<Navigate to="/login" />} />
-            // console.log("no user defined", user)
-          )}
+        <Route path="/" element={(user || authenticate) ? <Dashboard/> : <Navigate to={"/login"}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </>
     </Router>

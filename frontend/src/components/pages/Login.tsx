@@ -17,6 +17,7 @@ import Stack from "@mui/joy/Stack";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
+import Snackbar from "@mui/joy/Snackbar";
 import GoogleIcon from "./GoogleIcon";
 import {
   BrowserRouter as Router,
@@ -64,12 +65,22 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login, user, authenticate } = useAuthentication();
+  const [showDialog, setShowDialog] = React.useState(false);
+  const [clickedSubmit, setClickedSubmit] = React.useState(false);
 
-  if (authenticate) {
-    navigate('/');
+  console.log("Here", authenticate, user);
+
+  if (authenticate || user) {
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 3000);
+    // navigate("/dashboard");
   }
 
   const onSubmitLogin = async (event: React.FormEvent<SignInFormElement>) => {
+    setTimeout(() => {}, 6000);
+    setClickedSubmit(true);
+    setShowDialog(true);
     event.preventDefault();
     const formElements = event.currentTarget.elements;
     const data = {
@@ -84,8 +95,13 @@ export default function Login() {
         console.log("response", response);
 
         if (response.data.success) {
+          localStorage.setItem("user", JSON.stringify(data.username));
           login(data.username, data.password);
-          navigate(`/`);
+          console.log("Here2");
+          setTimeout(() => {
+            navigate(`/dashboard`);
+          }, 6000);
+          // navigate(`/dashboard`);
         } else {
           setError("Invalid username or password! Try again.");
         }
@@ -217,16 +233,28 @@ export default function Login() {
                       alignItems: "center",
                     }}
                   >
-                    <Checkbox size="sm" label="Remember me though i had to travel far" name="persistent" checked />
+                    <Checkbox
+                      size="sm"
+                      label="Remember me though i had to travel far"
+                      name="persistent"
+                      checked
+                    />
                   </Box>
                   {error && (
                     <Typography sx={{ mt: 0, mb: 0, color: "#ef5350" }}>
                       {error}
                     </Typography>
                   )}
-                  <Button type="submit" fullWidth>
+                  {!clickedSubmit ? (
+                    <Button type="submit" fullWidth>
+                      Sign in
+                    </Button>
+                  ) : (
+                    <Button loading fullWidth />
+                  )}
+                  {/* <Button type="submit" fullWidth>
                     Sign in
-                  </Button>
+                  </Button> */}
                 </Stack>
               </form>
             </Stack>
@@ -237,6 +265,26 @@ export default function Login() {
             </Typography>
           </Box>
         </Box>
+        <Snackbar
+          variant="soft"
+          color="success"
+          open={showDialog}
+          onClose={() => setShowDialog(false)}
+          // autoHideDuration={10}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          endDecorator={
+            <Button
+              onClick={() => setShowDialog(false)}
+              size="sm"
+              variant="soft"
+              color="success"
+            >
+              Dismiss
+            </Button>
+          }
+        >
+          Logging you in...
+        </Snackbar>
       </Box>
       <Box
         sx={(theme) => ({

@@ -43,35 +43,85 @@ router.post("/getByUsername", (req, res) => {
   });
 });
 
+// // User registration route
+// router.post("/register", async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+
+//     // // Check if username already exists
+//     // const existingUser = await db.query(
+//     //   "SELECT * FROM user WHERE username = ?",
+//     //   [username]
+//     // );
+//     // if (existingUser.length > 0) {
+//     //   return res.status(400).json({ error: "Username already exists" });
+//     // }
+//     const sql = "SELECT * FROM user WHERE username = ?";
+
+//     db.query(sql, [username], (err, result) => {
+//       if (err) {
+//         console.error("Error fetching user:", err);
+//         return res.status(500).json({ error: "Internal server error" });
+//       }
+  
+//       if (result.length > 0) {
+//         return res.status(401).json({ error: "Username is already taken" });
+//       }
+  
+//       // const user = result[0];
+//       // return res.json(user);
+//     });
+
+//     // Hash the password
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     // Insert the new user into the database
+//     await db.query("INSERT INTO user (username, password) VALUES (?, ?)", [
+//       username,
+//       hashedPassword,
+//     ]);
+
+//     res.status(201).json({ message: "User registered successfully" });
+//   } catch (error) {
+//     console.error("Error registering user:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
 // User registration route
 router.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
 
     // Check if username already exists
-    const existingUser = await db.query(
-      "SELECT * FROM user WHERE username = ?",
-      [username]
-    );
-    if (existingUser.length > 0) {
-      return res.status(400).json({ error: "Username already exists" });
-    }
+    const sql = "SELECT * FROM user WHERE username = ?";
+    db.query(sql, [username], async (err, result) => {
+      if (err) {
+        console.error("Error fetching user:", err);
+        return res.status(500).json({ error: "Internal server error" });
+      }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+      if (result.length > 0) {
+        return res.status(400).json({ error: "Username already exists" });
+      }
 
-    // Insert the new user into the database
-    await db.query("INSERT INTO user (username, password) VALUES (?, ?)", [
-      username,
-      hashedPassword,
-    ]);
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.status(201).json({ message: "User registered successfully" });
+      // Insert the new user into the database
+      await db.query("INSERT INTO user (username, password) VALUES (?, ?)", [
+        username,
+        hashedPassword,
+      ]);
+
+      res.status(201).json({ message: "User registered successfully" });
+    });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 // User login route
 router.post("/login", async (req, res) => {
