@@ -79,8 +79,6 @@ export default function Login() {
 
   const onSubmitLogin = async (event: React.FormEvent<SignInFormElement>) => {
     setTimeout(() => {}, 6000);
-    setClickedSubmit(true);
-    setShowDialog(true);
     event.preventDefault();
     const formElements = event.currentTarget.elements;
     const data = {
@@ -92,6 +90,8 @@ export default function Login() {
     try {
       const response = await axios.post(`${config.API_URL}user/login`, data);
       if (response) {
+        setClickedSubmit(true);
+        setShowDialog(true);
         console.log("response", response);
 
         if (response.data.success) {

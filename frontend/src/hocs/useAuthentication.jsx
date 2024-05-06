@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 function useAuthentication() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [authenticate, setAuthenticate] = useState(null);
+  const [authenticate, setAuthenticate] = useState(false);
 
   // Function to perform login
   const login = (username, password) => {
@@ -27,6 +27,7 @@ function useAuthentication() {
     // Clear user state and remove from localStorage
     setUser(null);
     setError(null);
+    setAuthenticate(false);
     localStorage.removeItem("user");
   };
 

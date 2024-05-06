@@ -19,7 +19,10 @@ function App() {
     <Router>
       <>
         <Routes>
-        <Route path="/" element={(user || authenticate) ? <Dashboard/> : <Navigate to={"/login"}/>} />
+          <Route
+            path="/"
+            element={user ? <Dashboard /> : <Navigate to={"/login"} />}
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />

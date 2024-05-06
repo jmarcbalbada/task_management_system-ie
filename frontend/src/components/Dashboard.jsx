@@ -6,6 +6,7 @@ import useAuthentication from "../hocs/useAuthentication";
 import axios from "axios";
 import config from "../data/configure";
 import Forbidden from "../assets/forbidden.png";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAuthentication();
@@ -55,7 +56,10 @@ const Dashboard = () => {
             whiteSpace: "nowrap",
           }}
         >
-          Access Forbidden.
+          Access Forbidden.{"  "}
+          <Link to="/login" style={{ color: "white" }}>
+            Log in here instead
+          </Link>
         </h1>
         <div
           style={{
