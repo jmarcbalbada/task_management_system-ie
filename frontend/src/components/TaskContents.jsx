@@ -177,7 +177,8 @@ const TaskContents = ({ categoryId }) => {
             <div key={task.task_id}>
               <Box
                 sx={{
-                  backgroundColor: "#1a1a1a",
+                  // backgroundColor: "#1a1a1a",
+                  backgroundColor: "#363535",
                   width: "80vw",
                   height: "auto",
                   borderRadius: 10,
