@@ -1,0 +1,11 @@
+services:
+  - name: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    env:
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /
+    public: true
+    github:
+      branch: main
