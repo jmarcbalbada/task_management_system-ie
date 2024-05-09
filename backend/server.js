@@ -28,7 +28,7 @@ const db = mysql.createConnection({
   host: "35.236.169.7",
   user: "root",
   password: "",
-  database: "taskmanagement",
+  database: "task_management",
 });
 
 // Start the database connection
