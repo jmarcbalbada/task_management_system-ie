@@ -24,11 +24,11 @@ app.use(express.json());
 
 //google
 const db = mysql.createConnection({
-  socketPath: "/cloudsql/peppy-appliance-418100:asia-east1:taskmanagement",
+  // socketPath: "/cloudsql/peppy-appliance-418100:asia-east1:taskmanagement",
   host: "35.236.169.7",
   user: "root",
   password: "",
-  database: "task_management",
+  database: "taskmanagement",
 });
 
 // Start the database connection
