@@ -7,20 +7,20 @@ app.use(cors());
 app.use(express.json());
 
 // local
-// const db = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "",
-//   database: "task_management",
-// });
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "task_management",
+});
 
 //deployed
-const db = mysql.createConnection({
-  host: "bp64edmhqzhq1vg1azkm-mysql.services.clever-cloud.com",
-  user: "uoq6wneh0wsjqncc",
-  password: "kaCx80NYngwtq0leRz5h",
-  database: "bp64edmhqzhq1vg1azkm",
-});
+// const db = mysql.createConnection({
+//   host: "bp64edmhqzhq1vg1azkm-mysql.services.clever-cloud.com",
+//   user: "uoq6wneh0wsjqncc",
+//   password: "kaCx80NYngwtq0leRz5h",
+//   database: "bp64edmhqzhq1vg1azkm",
+// });
 
 // Start the database connection
 db.connect((err) => {
