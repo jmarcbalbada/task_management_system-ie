@@ -48,7 +48,6 @@ const db = mysql.createConnection({
   user: "root",
   password: "",
   database: "task_management",
-  socketPath: "/cloudsql/peppy-appliance-418100:asia-east1:taskmanagement",
   port: 3306,
 });
 
