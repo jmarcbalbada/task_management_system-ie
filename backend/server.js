@@ -25,8 +25,8 @@ app.use(express.json());
 //google
 const db = mysql.createConnection({
   host: "35.236.169.7",
-  user: "admin",
-  password: "123",
+  user: "root",
+  password: "",
   database: "task_management",
 });
 
