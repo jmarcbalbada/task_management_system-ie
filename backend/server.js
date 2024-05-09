@@ -7,12 +7,12 @@ app.use(cors());
 app.use(express.json());
 
 // local
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "task_management",
-});
+// const db = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "",
+//   database: "task_management",
+// });
 
 //deployed
 // const db = mysql.createConnection({
@@ -21,6 +21,14 @@ const db = mysql.createConnection({
 //   password: "kaCx80NYngwtq0leRz5h",
 //   database: "bp64edmhqzhq1vg1azkm",
 // });
+
+//google
+const db = mysql.createConnection({
+  host: "35.236.169.7",
+  user: "admin",
+  password: "123",
+  database: "task_management",
+});
 
 // Start the database connection
 db.connect((err) => {
